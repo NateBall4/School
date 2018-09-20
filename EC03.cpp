@@ -10,34 +10,34 @@
 
 int main()
 {
-	char list[] = " "; 
+	char list[5] = " "; 
+	char phantom;
 
 	printf("Please enter a single letter: ");
-	scanf("%c\n", &list[0]);
-	rewind(stdin);
+	scanf("%c%c", &list[0], &phantom);
 
-		printf("Please enter a single letter: ");
-		scanf("%c\n", &list[1]);
+		printf("\nPlease enter a single letter: ");
+		scanf("%c", &list[1]);
 		rewind(stdin);
 		
-		printf("Please enter a single letter: ");
-		scanf("%c\n", &list[2]);
+		printf("\nPlease enter a single letter: ");
+		scanf("%c", &list[2]);
 		rewind(stdin);
 
-		printf("Please enter a single letter: ");
-		scanf("%c\n", &list[3]);
+		printf("\nPlease enter a single letter: ");
+		scanf("%c", &list[3]);
 		rewind(stdin);
 
-		printf("Please enter a single letter: ");
-		scanf("%c\n", &list[4]);
+		printf("\nPlease enter a single letter: ");
+		scanf("%c", &list[4]);
 
+		printf("\nLetter    Number    ASCII\n");
 
-
-		printf("%c", list[0]);
-			printf("%c", list[1]);
-			printf("%c", list[2]);
-			printf("%c", list[3]);
-			printf("%c", list[4]);
+		    printf("%c         %d        %x\n", list[0], list[0], list[0]);
+			printf("%c         %d        %x\n", list[1], list[1], list[1]);
+			printf("%c         %d        %x\n", list[2], list[2], list [2]);
+			printf("%c         %d       %x\n", list[3], list[3], list[3]);
+			printf("%c         %d       %x\n", list[4], list[4], list[4]);
 
 
 	_getch();

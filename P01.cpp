@@ -29,6 +29,7 @@ int main() {
 
 	printf("Please enter your choice: ");
 	scanf("%c", &choice);
+	rewind(stdin);
 	printf("\n");
 
 	if (b == 0 && choice == '/' || b == 0 && choice == '%') {
@@ -43,6 +44,37 @@ int main() {
 	else {
 		printf("That is not a valid input\n\n");
 		choice = 'I';
+
+		while (choice = 'I') {
+			printf("What calculation would you Like to perform?\n");
+			printf("For addition enter: +\n");
+			printf("For subtraction enter: -\n");
+			printf("For multiplication Enter: *\n");
+			printf("For division enter: /\n");
+			printf("For modulus enter: %%\n\n");
+
+
+			printf("Please enter your choice: ");
+			scanf("%c", &choice);
+			rewind(stdin);
+			printf("\n");
+
+			if (b == 0 && choice == '/' || b == 0 && choice == '%') {
+				choice = 'E';
+				printf("Cannot divide by 0\n");
+				break;
+			}
+			else if (choice == '+' || choice == '-' || choice == '*' || choice == '/' || choice == '%' && choice != invalid) {
+				holder = choice;
+				choice = valid;
+				break;
+			}
+			else {
+				printf("----------------------------------------------------------------\n");
+				printf("That is not a valid input\n\n");
+				choice = 'I';
+			}
+		}
 
 	}
 	
@@ -71,7 +103,7 @@ int main() {
 			printf("\n %d %c %d = %.4f", a, holder, b, answer);
 			break;
 
-		case 'E': printf("cannot divide by zero");
+		case 'E': 
 			break;
 
 		case 'I': printf("That is not a valid input");

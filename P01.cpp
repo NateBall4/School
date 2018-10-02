@@ -15,6 +15,8 @@ int main() {
 	scanf("%d", &a);
 	rewind(stdin);
 
+	//REPROMPT HERE
+
 	printf("\nPlease enter your second value: ");
 	scanf("%d", &b);
 	rewind(stdin);

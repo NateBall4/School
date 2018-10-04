@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <conio.h>
+
+#pragma warning(disable:4996)
+
+int main() {
+	char firstSym = ' ';
+	char secSym = ' ';
+	char space = ' ';
+	int row = 0;
+	int column = 0;
+	int i = 0;
+	int x = 0;
+	int total = 0;
+
+
+	printf("Enter your first symbol: ");
+	scanf("%c", &firstSym);
+	rewind(stdin);
+
+	printf("\n\nEnter your second Symbol: ");
+	scanf("%c", &secSym);
+	rewind(stdin);
+
+	printf("\n\nHow many rows?: ");
+	scanf("%d", &row);
+	rewind(stdin);
+
+	printf("\n\nHow many Columns?: ");
+	scanf("%d", &column);
+	rewind(stdin);
+
+	//Columns
+	printf("%-4c%c", space,secSym);
+	for (i = 1 ; i <= column; i++) {
+		printf(" %-3d%c", i, secSym);
+	}
+	printf("\n");
+	//prints the first symbol under the top number row
+	for (i = 0; i <= column; i++) {
+		printf("%c%c%c%c+", firstSym, firstSym, firstSym, firstSym);
+	}
+	//Rows
+	for (i = 1; i <= row; i++) {
+		printf("\n");
+		printf("%2d%3c",i,secSym);
+		//prints results
+		for (x = 1; x <= column; x++) {
+			total = x * i;
+			printf("%2d %2c", total, secSym);
+		}
+	}
+
+
+
+
+	_getch();
+	return 0;
+}

@@ -1,0 +1,47 @@
+// INCLUDES
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <conio.h>
+#include <algorithm>
+// DEFINES
+#define LOWER_DIE 1 // LOWER_DIE must be at least 1
+#define UPPER_DIE 10
+#define TRIALS 10000 
+
+// PROTOTYPES
+int genRand(int, int);
+int getTwoDieSum();
+int seed(unsigned int);
+
+// MAIN
+int main() {
+int numberArray[2 * UPPER_DIE + 1]; // holds frequency of rolls
+
+// initialize numberArray
+std::fill_n(numberArray, 2 * UPPER_DIE + 1, 0);
+
+// seed the random number generator
+
+// roll the dice and keep track of what was rolled in the array
+
+// display results
+
+_getch();
+return 0;
+}
+
+// FUNCTION IMPLEMENTATIONS
+int genRand(int lower, int upper) {
+int range = (upper - lower) + 1;
+return rand() % range + lower;
+}
+
+//int getTwoDieSum() {
+//// YOUR IMPLEMENTATION GOES HERE
+//
+//}
+
+int seed(unsigned int) {
+	 srand((unsigned int)time(NULL)); //SEED
+}

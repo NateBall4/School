@@ -26,10 +26,13 @@ int main() {
 	srand((unsigned int)time(NULL));
 
 	// roll the dice and keep track of what was rolled in the array
-	for (int x = 0; x <= TRIALS; x++) {
+	for (int x = 0; x < TRIALS; x++) {
+		//Dice 1
 		a = genRand(LOWER_DIE, UPPER_DIE); 
+		//Dice 2
 		b = genRand(LOWER_DIE, UPPER_DIE);
 
+		//after the dice rolls the roll bumps up one of the values in the array
 		if (getTwoDieSum(a, b) == 1) {
 			numberArray[0] += 1;
 		}

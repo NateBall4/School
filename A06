@@ -8,118 +8,43 @@
 #define LOWER_DIE 1 // LOWER_DIE must be at least 1
 #define UPPER_DIE 10
 #define TRIALS 10000 
-
+#define X -1
 // PROTOTYPES
 int genRand(int, int);
-int getTwoDieSum(int&,int&); 
+int getTwoDieSum();
 
 // MAIN
 int main() {
 	int numberArray[2 * UPPER_DIE + 1]; // holds frequency of rolls
 	int a = 0;
 	int b = 0;
-
+	int x = 0;
 	// initialize numberArray
-	std::fill_n(numberArray, 2 * UPPER_DIE + 1, 0);
+	/*std::fill_n(numberArray, 2 * UPPER_DIE + 1, 0);*/
+	//dont use int x in for loop
+	while (numberArray[2 * UPPER_DIE + 1] != X) {
+		numberArray[x++] = 0;
+		if (numberArray[2 * UPPER_DIE + 1] == 0) {
+			numberArray[2 * UPPER_DIE + 1] = X;
+		}
+	}
 
 	// seed the random number generator
 	srand((unsigned int)time(NULL));
 
-	// roll the dice and keep track of what was rolled in the array
+	// roll the dice and keep track of what was rolled in the array (ALT)
 	for (int x = 0; x < TRIALS; x++) {
-		//Dice 1
-		a = genRand(LOWER_DIE, UPPER_DIE); 
-		//Dice 2
-		b = genRand(LOWER_DIE, UPPER_DIE);
+		numberArray[getTwoDieSum()]++;
+	}
 
-		//after the dice rolls the roll bumps up one of the values in the array
-		if (getTwoDieSum(a, b) == 1) {
-			numberArray[0] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 2) {
-			numberArray[1] += 1;
-		}	
-		else if (getTwoDieSum(a, b) == 3) {
-			numberArray[2] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 4) {
-			numberArray[3] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 5) {
-			numberArray[4] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 6) {
-			numberArray[5] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 7) {
-			numberArray[6] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 8) {
-			numberArray[7] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 9) {
-			numberArray[8] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 10) {
-			numberArray[9] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 11) {
-			numberArray[10] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 12) {
-			numberArray[11] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 13) {
-			numberArray[12] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 14) {
-			numberArray[13] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 15) {
-			numberArray[14] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 16) {
-			numberArray[15] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 17) {
-			numberArray[16] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 18) {
-			numberArray[17] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 19) {
-			numberArray[18] += 1;
-		}
-		else if (getTwoDieSum(a, b) == 20) {
-			numberArray[19] += 1;
-		}
-		
-    }
 	// display results
-	printf("Roll Value   : ");
+	printf("Roll Value: ");
 	printf("Frequency\n");
 
-	printf("1            : %d\n", numberArray[0]);
-	printf("2            : %d\n", numberArray[1]);
-	printf("3            : %d\n", numberArray[2]);
-	printf("4            : %d\n", numberArray[3]);
-	printf("5            : %d\n", numberArray[4]);
-	printf("6            : %d\n", numberArray[5]);
-	printf("7            : %d\n", numberArray[6]);
-	printf("8            : %d\n", numberArray[7]);
-	printf("9            : %d\n", numberArray[8]);
-	printf("10           : %d\n", numberArray[9]);
-	printf("11           : %d\n", numberArray[10]);
-	printf("12           : %d\n", numberArray[11]);
-	printf("13           : %d\n", numberArray[12]);
-	printf("14           : %d\n", numberArray[13]);
-	printf("15           : %d\n", numberArray[14]);
-	printf("16           : %d\n", numberArray[15]);
-	printf("17           : %d\n", numberArray[16]);
-	printf("18           : %d\n", numberArray[17]);
-	printf("19           : %d\n", numberArray[18]);
-	printf("20           : %d\n", numberArray[19]);
-	
+	for (int i = 2; i < 2 * UPPER_DIE + 1; i++) {
+		printf("%10d: ", i);
+		printf("%d\n", numberArray[getTwoDieSum()]);
+	}
 	_getch();
 	return 0;
 }
@@ -130,9 +55,7 @@ int genRand(int lower, int upper) {
 	return rand() % range + lower;
 }
 
-int getTwoDieSum(int& a, int& b) {
-// YOUR IMPLEMENTATION GOES HERE
-	int sum;
-	sum = a + b;
-	return sum;
+int getTwoDieSum() {
+	// YOUR IMPLEMENTATION GOES HERE
+	return genRand(LOWER_DIE, UPPER_DIE) + genRand(LOWER_DIE, UPPER_DIE);
 }

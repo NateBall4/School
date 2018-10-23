@@ -1,5 +1,6 @@
 // INCLUDES 
 #include <stdio.h> 
+#include<conio.h>
 
 // DEFINES 
 #ifndef __TRUE_FALSE__ 
@@ -16,24 +17,29 @@
 // PROTOTYPES 
 void InitializeBoard(char[ROWS][COLS]);
 void DisplayBoard(char[ROWS][COLS]);
-int PlayerMove(int, int, char[ROWS][COLS], char);
+//int PlayerMove(int, int, char[ROWS][COLS], char);
 
 // MAIN 
 int main() {
 	// declare variables 
 	char board[ROWS][COLS]; 
+
 	// initialize board 
 	InitializeBoard(board); 
+
 	// populate the board with moves 
-	PlayerMove(1, 1, board, MARKONE);
+	/*PlayerMove(1, 1, board, MARKONE);
 	PlayerMove(1, 2, board, MARKONE);
 	PlayerMove(4, 3, board, MARKONE);
 	PlayerMove(1, 1, board, MARKTWO);
 	PlayerMove(6, 2, board, MARKTWO);
-	PlayerMove(4, 12, board, MARKTWO);
+	PlayerMove(4, 12, board, MARKTWO);*/
+
 	// display the board 
 	DisplayBoard(board);
+
 	// exit program 
+	_getch();
 	return 0;
 }
 
@@ -51,10 +57,16 @@ void InitializeBoard(char board[ROWS][COLS]){
 
 void DisplayBoard(char board[ROWS][COLS]) {
 	// YOUR IMPLEMENTATION GOES HERE 
-
+	for (int i = 0; i < COLS; i++) {
+		printf("---+");
+	}
+	printf("\n");
+	for (int j = 0; j < ROWS; j++) {
+		printf(":\n");
+	}
 }
-
-int PlayerMove(int row, int col, char board[ROWS][COLS], char symbol) {
-	// YOUR IMPLEMENTATION GOES HERE 
-
-}
+//
+//int PlayerMove(int row, int col, char board[ROWS][COLS], char symbol) {
+//	// YOUR IMPLEMENTATION GOES HERE 
+//
+//}

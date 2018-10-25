@@ -107,11 +107,12 @@ void DisplayBoard(char board[ROWS][COLS]) {
 
 int PlayerMove(int row, int col, char board[ROWS][COLS], char symbol) {
 	board[row][col] = board[ROWS][COLS];
+	board[ROWS][COLS] = symbol;
 	
 	int moveAttemptStatus = MOVE_UNDETERMINED;
 
 	// Determine if this move is out of bounds with a single test...
-	if (row > ROWS || col > COLS) {
+	if (row > ROWS || col > COLS || row < 0 || col < 0) {
 		moveAttemptStatus = MOVE_OUT_OF_BOUNDS;
 		symbol = ' ';
 	// Determine if the move is a collision with a single test...
@@ -122,24 +123,14 @@ int PlayerMove(int row, int col, char board[ROWS][COLS], char symbol) {
 	// It wasn't a collision, it wasn't out of bounds... it must be good.
 	else {
 		// MAKE THE MOVE!
-		
+		board[ROWS][COLS] = symbol;
 		moveAttemptStatus = MOVE_OK;
 	}
 
 
-	if (moveAttemptStatus == MOVE_OUT_OF_BOUNDS) {
-		symbol = ' ';
-	}
-	else if (moveAttemptStatus == MOVE_COLLISION) {
-		if (symbol == MARKONE) {
-			symbol = MARKTWO;
-		}
-		else if (symbol == MARKTWO) {
-			symbol = MARKONE;
-		}
-	}
+	
 
-	board[row][col] = symbol;
+	
 	// Report back to the client code about what happened with the move attempt.
 	return moveAttemptStatus;
 	

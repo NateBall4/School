@@ -22,10 +22,10 @@ void DisplayBoard(char[ROWS][COLS]);
 // MAIN 
 int main() {
 	// declare variables 
-	char board[ROWS][COLS]; 
+	char board[ROWS][COLS];
 
 	// initialize board 
-	InitializeBoard(board); 
+	InitializeBoard(board);
 
 	// populate the board with moves 
 	/*PlayerMove(1, 1, board, MARKONE);
@@ -44,11 +44,11 @@ int main() {
 }
 
 // FUNCTION IMPLEMENTATIONS 
-void InitializeBoard(char board[ROWS][COLS]){ 
+void InitializeBoard(char board[ROWS][COLS]) {
 	// YOUR IMPLEMENTATION GOES HERE 
 
 	for (int i = 0; i < ROWS; i++) {
-		for (int j = 0;j < COLS;j++) {
+		for (int j = 0; j < COLS; j++) {
 			board[i][j] = BLANK;
 		}
 	}
@@ -57,13 +57,39 @@ void InitializeBoard(char board[ROWS][COLS]){
 
 void DisplayBoard(char board[ROWS][COLS]) {
 	// YOUR IMPLEMENTATION GOES HERE 
+	int counter = 0;
+
 	for (int i = 0; i < COLS; i++) {
 		printf("---+");
 	}
+
 	printf("\n");
-	for (int j = 0; j < ROWS; j++) {
-		printf(":\n");
+
+	//Rows
+	char sym = '│';
+	char line = '-';
+
+	for (int j = 1; j <= ROWS; j++) {
+		printf("\n");
+	
+		
+		printf("%d%c", j, sym);
+
+		//prints results
+		for (int x = 1; x <= COLS; x++) {
+			printf("%3c", sym);
+
+		}
+		printf("\n");
+		while (counter < COLS) {
+			printf("%c%c%c", line, line, line);
+			counter++;
+		}
+		counter = 0;
 	}
+	
+		
+	
 }
 //
 //int PlayerMove(int row, int col, char board[ROWS][COLS], char symbol) {

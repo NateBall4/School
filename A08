@@ -40,7 +40,10 @@ int main() {
 	PlayerMove(2, 1, board, MARKONE);
 	PlayerMove(3, 1, board, MARKONE);
 
+	
 	DisplayBoard(board);
+	VictoryCheck(board, WIN_REQUIREMENT);
+
 
 	_getch();
 	return 0;
@@ -166,22 +169,24 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 			//  (XPresents, OPresents) can be set to TRUE.
 
 			// Scan in a "horizontal" direction.
-			for (int x = 0; x <= ROWS; x++) {
+			for (int x = 0; x <= checkMe[i][j+1]; x++) {
 				//scans the row for either X or O
-				if (checkMe[i][j+1] == MARKONE) {
+				if (checkMe[i][j + 1] == MARKONE) {
 					counterX += 1;
+					if (checkMe[i][j + 1] == BLANK || checkMe[i][j + 1] == MARKTWO && counterX > 0) {
+						counterX = 0;
+					}
 				}
-				else if (checkMe[i][j+1] == MARKTWO) {
+				else if (checkMe[i][j + 1] == MARKTWO) {
 					counterO += 1;
+
+					if (checkMe[i][j + 1] == BLANK || checkMe[i][j + 1] == MARKONE || counterO > 0) {
+						counterO = 0;
+					}
 				}
 
 				//resets the counter if the marker is different or a space is detected
-				if (checkMe[i][j] == BLANK || checkMe[i][j] == MARKTWO && counterX > 0) {
-					counterX = 0;
-				}
-				else if (checkMe[i][j] == BLANK || checkMe[i][j] == MARKONE || counterO > 0) {
-					counterO = 0;
-				}
+				
 			}
 
 			// Scan in a "vertical" direction.

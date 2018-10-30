@@ -34,6 +34,12 @@ int main() {
 	char board[ROWS][COLS];
 
 	InitializeBoard(board);
+
+	//test moves
+	PlayerMove(1, 1,board, MARKONE);
+	PlayerMove(2, 1, board, MARKONE);
+	PlayerMove(3, 1, board, MARKONE);
+
 	DisplayBoard(board);
 
 	_getch();
@@ -102,7 +108,7 @@ int PlayerMove(int row, int col, char board[ROWS][COLS], char symbol) {
 	// Determine if this move is out of bounds with a single test...
 	if (row < 0 || row > ROWS || col < 0 || col > COLS) {
 		moveAttemptStatus = MOVE_OUT_OF_BOUNDS;
-		symbol = ' ';
+		symbol = BLANK;
 		board[ROWS][COLS] = symbol;
 		// Determine if the move is a collision with a single test...
 	}
@@ -135,6 +141,8 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 	int blankSeen = FALSE;
 	int XPresents = FALSE;
 	int OPresents = FALSE;
+	int counterX = 0;
+	int counterO = 0;
 
 	// Is there a blank space on the board?
 	for (int i = 0; i < ROWS; i++) {
@@ -157,13 +165,46 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 			//  presented victory and the appropriate flag
 			//  (XPresents, OPresents) can be set to TRUE.
 
-			// Scan in a "vertical" direction.
-
 			// Scan in a "horizontal" direction.
+			for (int x = 0; x <= ROWS; x++) {
+				//scans the row for either X or O
+				if (checkMe[i][j+1] == MARKONE) {
+					counterX += 1;
+				}
+				else if (checkMe[i][j+1] == MARKTWO) {
+					counterO += 1;
+				}
 
+				//resets the counter if the marker is different or a space is detected
+				if (checkMe[i][j] == BLANK || checkMe[i][j] == MARKTWO && counterX > 0) {
+					counterX = 0;
+				}
+				else if (checkMe[i][j] == BLANK || checkMe[i][j] == MARKONE || counterO > 0) {
+					counterO = 0;
+				}
+			}
+
+			// Scan in a "vertical" direction.
+		
 			// Scan in a "diagonal-up" direction.
-
+			
 			// Scan in a "diagonal-down" direction.
+
+			//check results
+			if (counterX == winRequirement) {
+				XPresents = TRUE;
+			}
+			else if (counterO == winRequirement) {
+				OPresents = TRUE;
+			}
+
+			//prints message
+			if (XPresents == TRUE) {
+				printf("X IS PRESENTING");
+			}
+			else if (OPresents == TRUE) {
+				printf("O IS PRESENTING");
+			}
 		}
 	}
 	return 0;

@@ -170,7 +170,7 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 			//  (XPresents, OPresents) can be set to TRUE.
 
 			// Scan in a "horizontal" direction.
-			for (int x = 0; x <= checkMe[i][x]; x++) {
+				for (int x = 0; x <= checkMe[i][x]; x++) {
 				//scans the row for either X or O
 				if (checkMe[i][x] == MARKONE) {
 					counterX += 1;
@@ -186,6 +186,7 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 				else if (checkMe[i][x] == BLANK || checkMe[i][x] == MARKONE && counterO > 0) {
 					counterO = 0;
 				}
+			}
 			}
 				// Scan in a "vertical" direction.
 			//for (int y = 0; y <= checkMe[y+n][j]; y++) {

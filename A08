@@ -187,24 +187,26 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 					counterO = 0;
 				}
 			}
-			// Scan in a "vertical" direction.
-			for (int y = 0; y <= checkMe[y][j]; y++) {
-				//scans the row for either X or O
-				if (checkMe[y][j] == MARKONE) {
-					counterX += 1;
-				}
-				else if (checkMe[y][j] == MARKTWO && counterX > 0) {
-						counterX = 0;
-				}
+				// Scan in a "vertical" direction.
+			//for (int y = 0; y <= checkMe[y+n][j]; y++) {
+			//	//scans the row for either X or O
+			//	if (checkMe[y+n][j] == MARKONE) {
+			//		counterX += 1;
+			//	}
+			//	else if (checkMe[y+n][j] == MARKTWO && counterX > 0) {
+			//		counterX = 0;
+			//	}
 
-				//checks for O
-				 if (checkMe[y][j] == MARKTWO) {
-					counterO += 1;
-				}//resets the counter if the marker is different or a space is detected
-				else if (checkMe[y][j] == MARKONE || counterO > 0) {
-						counterO = 0;
-				}
-			}
+			//	//checks for O
+			//	if (checkMe[y+n][j] == MARKTWO) {
+			//		counterO += 1;
+			//	}//resets the counter if the marker is different or a space is detected
+			//	else if (checkMe[y+n][j] == MARKONE || counterO > 0) {
+			//		counterO = 0;
+			//	}
+			//n += 1;
+			//}
+
 			// Scan in a "diagonal-up" direction.
 
 			// Scan in a "diagonal-down" direction.

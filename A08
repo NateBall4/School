@@ -36,9 +36,10 @@ int main() {
 	InitializeBoard(board);
 
 	//test moves
+	PlayerMove(1, 1, board, MARKONE);
+	PlayerMove(1, 2, board, MARKONE);
 	PlayerMove(1, 3, board, MARKONE);
-	PlayerMove(2, 2, board, MARKONE);
-	PlayerMove(3, 1, board, MARKONE);
+	//PlayerMove(2, 3, board, MARKTWO);
 
 
 	DisplayBoard(board);
@@ -159,7 +160,7 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 	// Check to see if X or O present victory.
 	for (int i = 0; i < ROWS; i++) {
 		for (int j = 0; j < COLS; j++) {
-			int n = 1;
+			int n = 0;
 			// To check and see if one of the tokens is presenting
 			//  a victory, write a loop that moves along the
 			//  spots indicated by the direction of the scan.  As
@@ -171,65 +172,24 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 			//  (XPresents, OPresents) can be set to TRUE.
 
 			// Scan in a "horizontal" direction. NOT WORKING
-			for (int x = 0; x <= checkMe[i][x+n]; x++) {
-				//scans the row for either X or O
-				if (checkMe[i][x+n] == MARKONE) {
-					counterX += 1;
-				}//resets the counter if the marker is different or a space is detected
-				else if (checkMe[i][x+n] != MARKONE && counterX > 0) {
-					counterX = 0;
-				}
-
-				//checks for O
-				 if (checkMe[i][x+n] == MARKTWO) {
-					counterO += 1;
-				}//resets the counter if the marker is different or a space is detected
-				else if (checkMe[i][x+n] != MARKTWO && counterO > 0) {
-					counterO = 0;
-				}
-				 n += 1;
-			}
-
-			//// Scan in a "vertical" direction. WORKING
-			//for (int y = 0; y <= checkMe[y+n][j]; y++) {
-			//	if (checkMe[i][y + n] == MARKONE) {
+			//for (int x = 0; x <= checkMe[i][x]; x++) {
+			//	//scans the row for either X or O
+			//	if (checkMe[i][x] == MARKONE) {
 			//		counterX += 1;
 			//	}//resets the counter if the marker is different or a space is detected
-			//	else if (checkMe[i][y + n] != MARKONE && counterX > 0) {
+			//	else if (checkMe[i][x] == BLANK || checkMe[i][x] == MARKTWO && counterX > 0) {
 			//		counterX = 0;
 			//	}
 
 			//	//checks for O
-			//	if (checkMe[i][y + n] == MARKTWO) {
+			//	if (checkMe[i][x] == MARKTWO) {
 			//		counterO += 1;
 			//	}//resets the counter if the marker is different or a space is detected
-			//	else if (checkMe[i][y + n] != MARKTWO && counterO > 0) {
+			//	else if (checkMe[i][x] == BLANK || checkMe[i][x] == MARKONE && counterO > 0) {
 			//		counterO = 0;
 			//	}
 			//	n += 1;
 			//}
-
-			// Scan in a "diagonal-up" direction.
-			for (int x = 0; x <= checkMe[i][x]; x++) {
-				for (int y = 0; y <= checkMe[y][x]; y++) {
-					if (checkMe[x + n][y + n] == MARKONE) {
-						counterX += 1;
-					}//resets the counter if the marker is different or a space is detected
-					else if (checkMe[x + n][y + n] != MARKONE && counterX > 0) {
-						counterX = 0;
-					}
-
-					//checks for O
-					if (checkMe[x + n][y + n] == MARKTWO) {
-						counterO += 1;
-					}//resets the counter if the marker is different or a space is detected
-					else if (checkMe[x + n][y + n] != MARKTWO && counterO > 0) {
-						counterO = 0;
-					}
-					n += 1;
-				}
-			}
-			// Scan in a "diagonal-down" direction.
 
 			//check results
 			if (counterX == winRequirement) {
@@ -240,14 +200,58 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 			}
 
 			//prints message
+			if (XPresents == TRUE) {
+				printf("\nX IS PRESENTING");
+			}
+			else if (OPresents == TRUE) {
+				printf("\nO IS PRESENTING");
+			}
+
+			// Scan in a "vertical" direction. WORKING
+			for (int y = 0; y <= checkMe[y+n][j]; y++) {
+				if (checkMe[y + n][j] == MARKONE) {
+					counterX += 1;
+				}//breaks the loop if 3 X's are detected
+				else if (counterX == 3) {
+					printf("Winrar");
+					break;
+				}
+				//resets the counter if the marker is different or a space is detected
+				else if (checkMe[y + n][j] != MARKONE && counterX > 0) {
+					counterX = 0;
+				}
+
+				//checks for O
+				if (checkMe[y + n][j] == MARKTWO) {
+					counterO += 1;
+				}//resets the counter if the marker is different or a space is detected
+				else if (checkMe[y + n][j] != MARKTWO && counterO > 0) {
+					counterO = 0;
+				}
+				n += 1;
+			}
+
+				//check results
+			if (counterX == winRequirement) {
+				XPresents = TRUE;
+			}
+			else if (counterO == winRequirement) {
+				OPresents = TRUE;
+			}
+
+			//prints message
+			if (XPresents == TRUE) {
+				printf("\nX IS PRESENTING");
+			}
+			else if (OPresents == TRUE) {
+				printf("\nO IS PRESENTING");
+			}
+
+			// Scan in a "diagonal-up" direction.
 		
+			// Scan in a "diagonal-down" direction.
+
 		}
-	}
-	if (XPresents == TRUE) {
-		printf("\nX IS PRESENTING");
-	}
-	else if (OPresents == TRUE) {
-		printf("\nO IS PRESENTING");
 	}
 	return 0;
 }

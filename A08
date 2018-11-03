@@ -36,9 +36,9 @@ int main() {
 	InitializeBoard(board);
 
 	//test moves
-	PlayerMove(1, 1, board, MARKTWO);
-	PlayerMove(2, 1, board, MARKONE);
-	PlayerMove(3, 1, board, MARKTWO);
+	PlayerMove(2, 1, board, MARKTWO);
+	PlayerMove(2, 2, board, MARKTWO);
+	PlayerMove(2, 3, board, MARKTWO);
 	PlayerMove(2, 3, board, MARKTWO);
 
 
@@ -179,76 +179,88 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 			//  presented victory and the appropriate flag
 			//  (XPresents, OPresents) can be set to TRUE.
 
-			// Scan in a "horizontal" direction. NOT WORKING
+			// Scan in a "horizontal" direction. WORKING
 			for (int x = 0; x <= COLS; x++) {
 
-					//If X or O has  already been marked as winner the loop should stop marking it over and over.
-					if (XPresents == TRUE) {
-						break;
-					}
-					else if (OPresents == TRUE) {
-						break;
-					}
+				//If X or O has  already been marked as winner the loop should stop marking it over and over.
+				if (XPresents == TRUE) {
+					break;
+				}
+				else if (OPresents == TRUE) {
+					break;
+				}
 
-					//checks the colums for X's
-					if (checkMe[x][j] == MARKONE) {
-						counterX += 1;
-					}
-					//resets the counter if the marker is different or a space is detected
-					else if (checkMe[x][j] != MARKONE) {
-						counterX = 0;
-					}
+				//checks the colums for X's
+				if (checkMe[x][j] == MARKONE) {
+					counterX += 1;
+				}
+				//resets the counter if the marker is different or a space is detected
+				else if (checkMe[x][j] != MARKONE) {
+					counterX = 0;
+				}
 
-					//checks for O
-					if (checkMe[x][j] == MARKTWO) {
-						counterO += 1;
-					}//resets the counter if the marker is different or a space is detected
-					else if (checkMe[x][j] != MARKTWO) {
-						counterO = 0;
-					}
+				//checks for O
+				if (checkMe[x][j] == MARKTWO) {
+					counterO += 1;
+				}//resets the counter if the marker is different or a space is detected
+				else if (checkMe[x][j] != MARKTWO) {
+					counterO = 0;
+				}
+			}
+
+			//check results
+			if (counterX == winRequirement) {
+				XPresents = TRUE;
+			}
+			else if (counterO == winRequirement) {
+				OPresents = TRUE;
 			}
 
 			// Scan in a "vertical" direction. WORKING 
-			//for (int y = 0; y < winRequirement; y++) {
+			for (int y = 0; y <= ROWS; y++) {
+				//If X or O has  already been marked as winner the loop should stop marking it over and over.
+				if (XPresents == TRUE) {
+						break;
+				}
+				else if (OPresents == TRUE) {
+					break;
+				}
 
-			//	//If X or O has  already been marked as winner the loop should stop marking it over and over.
-			//	if (XPresents == TRUE) {
-			//			break;
-			//	}
-			//	else if (OPresents == TRUE) {
-			//		break;
-			//	}
-			//	//checks the colums for X's
-			//	if (checkMe[i + n][j] == MARKONE) {
-			//		counterX += 1;
-			//		break;
-			//	}
-			//	//resets the counter if the marker is different or a space is detected
-			//	else if (checkMe[i + n][j] != MARKONE) {
-			//		counterX = 0;
-			//	}
+				//checks the colums for X's
+				if (checkMe[i][y] == MARKONE) {
+					counterX += 1;
+				}
+				//resets the counter if the marker is different or a space is detected
+				else if (checkMe[i][y] != MARKONE) {
+					counterX = 0;
+				}
 
-			//	//checks for O
-			//	if (checkMe[i + n][j] == MARKTWO) {
-			//		counterO += 1;
-			//		break;
-			//	}//resets the counter if the marker is different or a space is detected
-			//	else if (checkMe[i + n][j] != MARKTWO) {
-			//		counterO = 0;
-			//	}
-			//}
+				//checks for O
+				if (checkMe[i][y] == MARKTWO) {
+					counterO += 1;
+				}//resets the counter if the marker is different or a space is detected
+				else if (checkMe[i][y] != MARKTWO) {
+					counterO = 0;
+				}
+			}
 
+				//check results
+			if (counterX == winRequirement) {
+				XPresents = TRUE;
+			}
+			else if (counterO == winRequirement) {
+				OPresents = TRUE;
+			}
 
-		
 
 			// Scan in a "diagonal-up" direction.
-		
+
 			// Scan in a "diagonal-down" direction.
 
 
 		}
 	}
-	
+
 
 	//prints message
 	if (XPresents == TRUE) {

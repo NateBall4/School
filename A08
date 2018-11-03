@@ -36,10 +36,10 @@ int main() {
 	InitializeBoard(board);
 
 	//test moves
-	PlayerMove(2, 1, board, MARKTWO);
+	PlayerMove(1, 3, board, MARKTWO);
 	PlayerMove(2, 2, board, MARKTWO);
-	PlayerMove(2, 3, board, MARKTWO);
-	PlayerMove(2, 3, board, MARKTWO);
+	PlayerMove(3, 1, board, MARKTWO);
+	PlayerMove(2, 3, board, MARKONE);
 
 
 	DisplayBoard(board);
@@ -180,81 +180,135 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 			//  (XPresents, OPresents) can be set to TRUE.
 
 			// Scan in a "horizontal" direction. WORKING
-			for (int x = 0; x <= COLS; x++) {
+			//for (int x = 0; x <= COLS; x++) {
 
-				//If X or O has  already been marked as winner the loop should stop marking it over and over.
-				if (XPresents == TRUE) {
-					break;
-				}
-				else if (OPresents == TRUE) {
-					break;
-				}
+			//	//If X or O has  already been marked as winner the loop should stop marking it over and over.
+			//	if (XPresents == TRUE) {
+			//		break;
+			//	}
+			//	else if (OPresents == TRUE) {
+			//		break;
+			//	}
 
-				//checks the colums for X's
-				if (checkMe[x][j] == MARKONE) {
-					counterX += 1;
-				}
-				//resets the counter if the marker is different or a space is detected
-				else if (checkMe[x][j] != MARKONE) {
-					counterX = 0;
-				}
+			//	//checks the colums for X's
+			//	if (checkMe[x][j] == MARKONE) {
+			//		counterX += 1;
+			//	}
+			//	//resets the counter if the marker is different or a space is detected
+			//	else if (checkMe[x][j] != MARKONE) {
+			//		counterX = 0;
+			//	}
 
-				//checks for O
-				if (checkMe[x][j] == MARKTWO) {
-					counterO += 1;
-				}//resets the counter if the marker is different or a space is detected
-				else if (checkMe[x][j] != MARKTWO) {
-					counterO = 0;
-				}
-			}
+			//	//checks for O
+			//	if (checkMe[x][j] == MARKTWO) {
+			//		counterO += 1;
+			//	}//resets the counter if the marker is different or a space is detected
+			//	else if (checkMe[x][j] != MARKTWO) {
+			//		counterO = 0;
+			//	}
+			//}
 
-			//check results
-			if (counterX == winRequirement) {
-				XPresents = TRUE;
-			}
-			else if (counterO == winRequirement) {
-				OPresents = TRUE;
-			}
+			////check results
+			//if (counterX == winRequirement) {
+			//	XPresents = TRUE;
+			//}
+			//else if (counterO == winRequirement) {
+			//	OPresents = TRUE;
+			//}
 
 			// Scan in a "vertical" direction. WORKING 
-			for (int y = 0; y <= ROWS; y++) {
-				//If X or O has  already been marked as winner the loop should stop marking it over and over.
-				if (XPresents == TRUE) {
-						break;
-				}
-				else if (OPresents == TRUE) {
-					break;
-				}
+			//for (int y = 0; y <= ROWS; y++) {
+			//	//If X or O has  already been marked as winner the loop should stop marking it over and over.
+			//	if (XPresents == TRUE) {
+			//		break;
+			//	}
+			//	else if (OPresents == TRUE) {
+			//		break;
+			//	}
 
-				//checks the colums for X's
-				if (checkMe[i][y] == MARKONE) {
-					counterX += 1;
-				}
-				//resets the counter if the marker is different or a space is detected
-				else if (checkMe[i][y] != MARKONE) {
-					counterX = 0;
-				}
+			//	//checks the colums for X's
+			//	if (checkMe[i][y] == MARKONE) {
+			//		counterX += 1;
+			//	}
+			//	//resets the counter if the marker is different or a space is detected
+			//	else if (checkMe[i][y] != MARKONE) {
+			//		counterX = 0;
+			//	}
 
-				//checks for O
-				if (checkMe[i][y] == MARKTWO) {
-					counterO += 1;
-				}//resets the counter if the marker is different or a space is detected
-				else if (checkMe[i][y] != MARKTWO) {
-					counterO = 0;
-				}
-			}
+			//	//checks for O
+			//	if (checkMe[i][y] == MARKTWO) {
+			//		counterO += 1;
+			//	}//resets the counter if the marker is different or a space is detected
+			//	else if (checkMe[i][y] != MARKTWO) {
+			//		counterO = 0;
+			//	}
+			//}
 
-				//check results
-			if (counterX == winRequirement) {
-				XPresents = TRUE;
-			}
-			else if (counterO == winRequirement) {
-				OPresents = TRUE;
-			}
+			////check results
+			//if (counterX == winRequirement) {
+			//	XPresents = TRUE;
+			//}
+			//else if (counterO == winRequirement) {
+			//	OPresents = TRUE;
+			//}
 
 
-			// Scan in a "diagonal-up" direction.
+			// Scan in a "diagonal-up" direction. WORKING
+			//for (int x = 0; x <= COLS; x++) {
+			//		//If X or O has  already been marked as winner the loop should stop marking it over and over.
+			//	if (XPresents == TRUE) {
+			//		break;
+			//	}
+			//	else if (OPresents == TRUE) {
+			//		break;
+			//	}
 
+			//	//checks the colums for X's
+			//	if (checkMe[i][j] == MARKONE) {
+			//		counterX += 1;
+			//		while (checkMe[i + n][j - n] == MARKONE) {
+			//			counterX += 1;
+			//			if (checkMe[i + n][j - n] != MARKONE && counterX != winRequirement) {
+			//				counterX = 0;
+			//				break;
+			//			}
+			//			else if (counterX == winRequirement) {
+			//				XPresents = TRUE;
+			//				break;
+			//			}
+			//			n++;
+			//		}
+			//	}
+			//	//resets the counter if the marker is different or a space is detected
+			//	else if (checkMe[i][j] != MARKONE) {
+			//		counterX = 0;
+			//	}
+
+			//	//resets n for the next loop
+			//	n = 1;
+
+			//	//checks for O
+			//	if (checkMe[i][j] == MARKTWO) {
+			//		counterO += 1;
+			//		//checks to see if the diagonal up spots are the same 
+			//		while (checkMe[i + n][j - n] == MARKTWO) {
+			//			counterO += 1;
+			//			//if the spots are not the same it breaks the loop
+			//			if (checkMe[i + n][j - n] != MARKTWO && counterO != winRequirement) {
+			//				counterO = 0;
+			//				break;
+			//			}
+			//			else if (counterO == winRequirement) {
+			//				OPresents = TRUE;
+			//				break;
+			//			}
+			//			n++;
+			//		}
+			//	}//resets the counter if the marker is different or a space is detected
+			//	else if (checkMe[i][j] != MARKTWO) {
+			//		counterO = 0;
+			//	}
+			//}
 			// Scan in a "diagonal-down" direction.
 
 

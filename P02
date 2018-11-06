@@ -1,0 +1,484 @@
+// INCLUDES
+#include <stdio.h>
+#include <conio.h>
+
+#pragma warning(disable:4996)
+// DEFINES
+
+#ifndef __TRUE_FALSE__
+#define __TRUE_FALSE__
+#define TRUE 1
+#define FALSE 0
+#endif
+
+// ROWS and COLS must be between 1 and 9
+#define ROWS 7
+#define COLS 7
+
+// MARKER CODES
+#define MARKONE 'X'
+#define MARKTWO 'O'
+#define BLANK ' '
+
+// VICTORY CODES
+#define NOWIN 0
+#define MARKONEVICTORY 1
+#define MARKTWOVICTORY 2
+#define TIE 3
+#define ERROR 4
+#define EPIC_FAIL 5
+
+//move checkers
+#define MOVE_UNDETERMINED	-1
+#define MOVE_OK				0
+#define MOVE_COLLISION		1
+#define MOVE_OUT_OF_BOUNDS	2
+
+// GAME PARAMETER CODES
+#define WIN_REQUIREMENT 3
+
+// PROTOTYPES
+void InitializeBoard(char[ROWS][COLS]);
+void DisplayBoard(char[ROWS][COLS]);
+int PlayerMove(int, int, char[ROWS][COLS], char);
+int VictoryCheck(int, char[ROWS][COLS],int&);
+void DisplayVictoryMessage(int);
+
+// MAIN
+int main() {
+	//Initialize ariables
+	char board[ROWS][COLS];
+	int victoryCode = 0;
+	int x = 0;
+	int y = 0;
+	int playerOne = 0;
+	int playerTwo = 0;
+	char marker = BLANK;
+
+	// THE CORE LOGIC FOR YOUR GAME GOES HERE
+	InitializeBoard(board);
+		while(victoryCode == NOWIN){
+			if (playerOne > playerTwo) {
+				marker = MARKTWO;
+				playerTwo += 1;
+			}
+			else {
+				marker = MARKONE;
+				playerOne += 1;
+			}
+
+			printf("\nWhich colum?: ");
+			scanf("%d", &x);
+
+			printf("\nwhich row?: ");
+			scanf("%d", &y);
+
+			PlayerMove(x, y, board, marker);
+
+			DisplayBoard(board);
+			VictoryCheck(WIN_REQUIREMENT, board, victoryCode);
+}
+	// exit program
+	_getch();
+	return 0;
+
+}
+
+// FUNCTION IMPLEMENTATIONS
+void InitializeBoard(char board[ROWS][COLS]) {
+	// YOUR IMPLEMENTATION GOES HERE
+	for (int i = 0; i <= ROWS; i++) {
+		for (int j = 0; j <= COLS; j++) {
+			board[i][j] = BLANK;
+		}
+	}
+}
+
+void DisplayBoard(char board[ROWS][COLS]) {
+	// YOUR IMPLEMENTATION GOES HERE
+	int counter = 0;
+	char space = ' ';
+
+	//prints the number of colums
+	printf("\n");
+	for (int x = 1; x <= COLS; x++) {
+		printf("%4d", x);
+	}
+
+	//makes a space
+	printf("\n");
+
+	//prints the seperator under the number of colums
+	printf("%c", BLANK);
+	printf("+");
+	for (int i = 0; i < COLS; i++) {
+		printf("---+");
+	}
+
+	//makes a space 
+	printf("\n");
+
+	//initialized table symbols
+	char sym = '|';
+	char line = '-';
+	//prints Rows
+	for (int j = 1; j <= ROWS; j++) {
+		printf("\n");
+
+		printf("%d", j);
+		//prints Colums
+		for (int x = 1; x <= COLS; x++) {
+			printf("%c%3c", sym, board[x][j]);
+		}
+
+		printf("%c", sym);
+		//prints the seperators between rows
+		printf("\n");
+		while (counter < COLS) {
+			printf("%-2c%-2c", line, line);
+			counter++;
+		}
+		//finishes off the seperator
+		printf("%c%c", line, line);
+		counter = 0;
+	}
+}
+
+int PlayerMove(int row, int col, char board[ROWS][COLS], char symbol) {
+	// YOUR IMPLEMENTATION GOES HERE
+	int moveAttemptStatus = MOVE_UNDETERMINED;
+
+	// Determine if this move is out of bounds with a single test...
+	if (row < 0 || row > ROWS || col < 0 || col > COLS) {
+		moveAttemptStatus = MOVE_OUT_OF_BOUNDS;
+		symbol = BLANK;
+		board[ROWS][COLS] = symbol;
+		// Determine if the move is a collision with a single test...
+	}
+	else if (board[row][col] != BLANK) {
+		moveAttemptStatus = MOVE_COLLISION;
+		printf("MOVE COLLISION");
+	}
+	// It wasn't a collision, it wasn't out of bounds... it must be good.
+	else {
+		// MAKE THE MOVE!
+		moveAttemptStatus = MOVE_OK;
+	}
+
+	//if move attempt status is a collision and new symbol is an O it marks it as X
+	if (symbol == MARKTWO && moveAttemptStatus == MOVE_COLLISION) {
+		symbol = MARKONE;
+	}//opposite of the above
+	else if (symbol == MARKONE && moveAttemptStatus == MOVE_COLLISION) {
+		symbol = MARKTWO;
+	}
+
+	//prints results on board
+	board[row][col] = board[ROWS][COLS];
+	board[row][col] = symbol;
+
+	// Report back to the client code about what happened with the move attempt.
+	return moveAttemptStatus;
+}
+
+int VictoryCheck(int winRequirement, char checkMe[ROWS][COLS], int& victoryCode) {
+	// YOUR IMPLEMENTATION GOES HERE
+	int blankSeen = FALSE;
+	int XPresents = FALSE;
+	int OPresents = FALSE;
+	int counterX = 0;
+	int counterO = 0;
+	int n = 1;
+	// Is there a blank space on the board?
+	for (int i = 0; i < ROWS; i++) {
+		for (int j = 0; j < COLS; j++) {
+			if (checkMe[i + n][j + n] == BLANK) {
+				blankSeen = TRUE;
+			}
+		}
+	}
+
+	// Check to see if X or O present victory.
+	for (int i = 0; i < ROWS; i++) {
+		for (int j = 0; j < COLS; j++) {
+
+			counterX = 0;
+			counterO = 0;
+
+			int n = 1;
+
+			//check results
+			if (counterX == winRequirement) {
+				XPresents = TRUE;
+			}
+			else if (counterO == winRequirement) {
+				OPresents = TRUE;
+			}
+			// To check and see if one of the tokens is presenting
+			//  a victory, write a loop that moves along the
+			//  spots indicated by the direction of the scan.  As
+			//  you move to each spot, make sure it is logically
+			//  legal on the board.  If you see the same symbol
+			//  at each point in the scan and the symbol isn't a
+			//  blank space, you can conclude that token has
+			//  presented victory and the appropriate flag
+			//  (XPresents, OPresents) can be set to TRUE.
+
+			// Scan in a "horizontal" direction. WORKING
+			for (int x = 0; x <= COLS; x++) {
+
+				//If X or O has  already been marked as winner the loop should stop marking it over and over.
+				if (XPresents == TRUE) {
+					break;
+				}
+				else if (OPresents == TRUE) {
+					break;
+				}
+				//marks if one counter has won
+				if (counterX == winRequirement) {
+					XPresents = TRUE;
+				}
+				else if (counterO == winRequirement) {
+					OPresents = TRUE;
+				}
+
+				//checks the colums for X's
+				if (checkMe[x][j] == MARKONE) {
+					counterX += 1;
+				}
+				//resets the counter if the marker is different or a space is detected
+				else if (checkMe[x][j] != MARKONE) {
+					counterX = 0;
+				}
+
+				//checks for O
+				if (checkMe[x][j] == MARKTWO) {
+					counterO += 1;
+				}//resets the counter if the marker is different or a space is detected
+				else if (checkMe[x][j] != MARKTWO) {
+					counterO = 0;
+				}
+			}
+
+			//check results
+			if (counterX == winRequirement) {
+				XPresents = TRUE;
+			}
+			else if (counterO == winRequirement) {
+				OPresents = TRUE;
+			}
+
+			counterX = 0;
+			counterO = 0;
+
+			// Scan in a "vertical" direction.  WORKING
+			for (int y = 0; y <= ROWS; y++) {
+				//If X or O has  already been marked as winner the loop should stop marking it over and over.
+				if (XPresents == TRUE) {
+					break;
+				}
+				else if (OPresents == TRUE) {
+					break;
+				}
+
+				//marks if a player has won
+				if (counterX == winRequirement) {
+					XPresents = TRUE;
+				}
+				else if (counterO == winRequirement) {
+					OPresents = TRUE;
+				}
+
+				//checks the colums for X's
+				if (checkMe[i][y] == MARKONE) {
+					counterX += 1;
+				}
+				//resets the counter if the marker is different or a space is detected
+				else if (checkMe[i][y] != MARKONE) {
+					counterX = 0;
+				}
+
+				//checks for O
+				if (checkMe[i][y] == MARKTWO) {
+					counterO += 1;
+				}//resets the counter if the marker is different or a space is detected
+				else if (checkMe[i][y] != MARKTWO) {
+					counterO = 0;
+				}
+			}
+
+			//check results
+			if (counterX == winRequirement) {
+				XPresents = TRUE;
+			}
+			else if (counterO == winRequirement) {
+				OPresents = TRUE;
+			}
+			//resets variables
+			counterX = 0;
+			counterO = 0;
+
+			// Scan in a "diagonal-up" direction. WORKING
+			for (int x = 0; x <= winRequirement; x++) {
+				//If X or O has  already been marked as winner the loop should stop marking it over and over.
+				if (XPresents == TRUE) {
+					break;
+				}
+				else if (OPresents == TRUE) {
+					break;
+				}
+
+				//marks if a player has won
+				if (counterX == winRequirement) {
+					XPresents = TRUE;
+				}
+				else if (counterO == winRequirement) {
+					OPresents = TRUE;
+				}
+
+
+				//checks the colums for X's
+				if (checkMe[i][j] == MARKONE) {
+					counterX += 1;
+					while (checkMe[i + n][j - n] == MARKONE) {
+						counterX += 1;
+						if (checkMe[i + n][j - n] != MARKONE && counterX != winRequirement) {
+							counterX = 0;
+							break;
+						}
+						else if (counterX == winRequirement) {
+							XPresents = TRUE;
+							break;
+						}
+						n++;
+					}
+				}
+				//resets the counter if the marker is different or a space is detected
+				if (checkMe[i + n][j - n] != MARKONE) {
+					counterX = 0;
+				}
+
+				//resets variables for the next loop
+				n = 1;
+				counterX = 0;
+				counterO = 0;
+
+				//checks for O
+				if (checkMe[i][j] == MARKTWO) {
+					counterO += 1;
+					//checks to see if the diagonal up spots are the same 
+					while (checkMe[i + n][j - n] == MARKTWO) {
+						counterO += 1;
+						//if the spots are not the same it breaks the loop
+						if (checkMe[i + n][j - n] != MARKTWO && counterO != winRequirement) {
+							counterO = 0;
+							break;
+						}
+						else if (counterO == winRequirement) {
+							OPresents = TRUE;
+							break;
+						}
+						n++;
+					}
+				}//resets the counter if the marker is different or a space is detected
+				if (checkMe[i + n][j - n] != MARKTWO) {
+					counterO = 0;
+				}
+			}
+
+			// Scan in a "diagonal-down" direction.
+			for (int x = 0; x <= winRequirement; x++) {
+				//If X or O has  already been marked as winner the loop should stop marking it over and over.
+				if (XPresents == TRUE) {
+					break;
+				}
+				else if (OPresents == TRUE) {
+					break;
+				}
+
+				//marks if a player won
+				if (counterX == winRequirement) {
+					XPresents = TRUE;
+				}
+				else if (counterO == winRequirement) {
+					OPresents = TRUE;
+				}
+
+				//checks the diagonals for X's
+				if (checkMe[i][j] == MARKONE) {
+					counterX += 1;
+					while (checkMe[i + n][j + n] == MARKONE) {
+						counterX += 1;
+						if (checkMe[i + n][j + n] != MARKONE) {
+							counterX = 0;
+							break;
+						}
+						else if (counterX == WIN_REQUIREMENT) {
+							XPresents = TRUE;
+							break;
+						}
+						n++;
+					}
+				}
+				//resets the counter if the marker is different or a space is detected
+				if (checkMe[i + n][j + n] != MARKONE) {
+					counterX = 0;
+				}
+
+				//resets n for the next loop
+				n = 1;
+
+				//checks for O
+				if (checkMe[i][j] == MARKTWO) {
+					counterO += 1;
+					//checks to see if the diagonal up spots are the same 
+					while (checkMe[i + n][j + n] == MARKTWO) {
+						counterO += 1;
+						//if the spots are not the same it breaks the loop
+						if (checkMe[i + n][j + n] != MARKTWO) {
+							counterO = 0;
+							break;
+						}
+						else if (counterO == WIN_REQUIREMENT) {
+							OPresents = TRUE;
+							break;
+						}
+						n++;
+					}
+				}//resets the counter if the marker is different or a space is detected
+				if (checkMe[i + n][j + n] != MARKTWO) {
+					counterO = 0;
+				}
+			}
+
+		}
+	}
+
+
+	//prints message
+	if (blankSeen == FALSE && XPresents != TRUE) {
+		victoryCode = TIE;
+		printf("TIE");
+	}
+	else if (blankSeen == FALSE && OPresents != TRUE) {
+		victoryCode = TIE;
+		printf("TIE");
+	}
+	else if (XPresents == TRUE) {
+		victoryCode = MARKONEVICTORY;
+		printf("X YOU ARE THE WINRAR!");
+	}
+	else if (OPresents == TRUE) {
+		victoryCode = MARKTWOVICTORY;
+		printf("O YOU ARE THE WINRAR!");
+	}
+	else if (XPresents == TRUE && OPresents == TRUE) {
+		victoryCode = EPIC_FAIL;
+		printf("Well this is awkward......");
+	}
+	return victoryCode;
+}
+
+void DisplayVictoryMessage(int victoryCode) {
+	// AN IMPLEMENTATION FOR THIS FUNCTION WAS PROVIDED IN A WEEKLY ASSIGNMENT
+}

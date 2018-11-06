@@ -1,15 +1,32 @@
+// INCLUDES
 #include <stdio.h>
 #include <conio.h>
 
-#define TRUE			1
-#define FALSE			0
+#pragma warning(disable:4996)
+// DEFINES
 
-#define ROWS			3
-#define COLS			3
+#ifndef __TRUE_FALSE__
+#define __TRUE_FALSE__
+#define TRUE 1
+#define FALSE 0
+#endif
 
-#define MARKONE			'X'
-#define MARKTWO		    'O'
-#define BLANK			'*'
+// ROWS and COLS must be between 1 and 9
+#define ROWS 7
+#define COLS 7
+
+// MARKER CODES
+#define MARKONE 'X'
+#define MARKTWO 'O'
+#define BLANK ' '
+
+// VICTORY CODES
+#define NOWIN 0
+#define MARKONEVICTORY 1
+#define MARKTWOVICTORY 2
+#define TIE 3
+#define ERROR 4
+#define EPIC_FAIL 5
 
 //move checkers
 #define MOVE_UNDETERMINED	-1
@@ -17,54 +34,68 @@
 #define MOVE_COLLISION		1
 #define MOVE_OUT_OF_BOUNDS	2
 
-#define IN_PROGRESS		1
-#define X_WINS			2
-#define O_WINS			3
-#define TIE				4
-#define ERROR			5
-
+// GAME PARAMETER CODES
 #define WIN_REQUIREMENT 3
 
+// PROTOTYPES
 void InitializeBoard(char[ROWS][COLS]);
 void DisplayBoard(char[ROWS][COLS]);
 int PlayerMove(int, int, char[ROWS][COLS], char);
-int VictoryCheck(char[ROWS][COLS], int);
+int VictoryCheck(int, char[ROWS][COLS],int&);
+void DisplayVictoryMessage(int);
 
+// MAIN
 int main() {
+	//Initialize ariables
 	char board[ROWS][COLS];
+	int victoryCode = 0;
+	int x = 0;
+	int y = 0;
+	int playerOne = 0;
+	int playerTwo = 0;
+	char marker = BLANK;
 
+	// THE CORE LOGIC FOR YOUR GAME GOES HERE
 	InitializeBoard(board);
+		while(victoryCode == NOWIN){
+			if (playerOne > playerTwo) {
+				marker = MARKTWO;
+				playerTwo += 1;
+			}
+			else {
+				marker = MARKONE;
+				playerOne += 1;
+			}
 
-	//test moves
-	PlayerMove(1, 1, board, MARKONE);
-	PlayerMove(2, 1, board, MARKTWO);
-	PlayerMove(1, 2, board, MARKTWO);
-	PlayerMove(2, 2, board, MARKONE);
-	PlayerMove(3, 1, board, MARKONE);
-	PlayerMove(3, 2, board, MARKONE);
-	PlayerMove(3, 3, board, MARKTWO);
-	PlayerMove(1, 3, board, MARKONE);
-	//PlayerMove(2, 3, board, MARKONE);
+			printf("\nWhich colum?: ");
+			scanf("%d", &x);
 
+			printf("\nwhich row?: ");
+			scanf("%d", &y);
 
+			PlayerMove(x, y, board, marker);
 
-	DisplayBoard(board);
-	VictoryCheck(board, WIN_REQUIREMENT);
-
-
+			DisplayBoard(board);
+			VictoryCheck(WIN_REQUIREMENT, board, victoryCode);
+}
+	// exit program
 	_getch();
 	return 0;
+
 }
 
-void InitializeBoard(char initializeMe[ROWS][COLS]) {
+// FUNCTION IMPLEMENTATIONS
+void InitializeBoard(char board[ROWS][COLS]) {
+	// YOUR IMPLEMENTATION GOES HERE
 	for (int i = 0; i <= ROWS; i++) {
 		for (int j = 0; j <= COLS; j++) {
-			initializeMe[i][j] = BLANK;
+			board[i][j] = BLANK;
 		}
 	}
 }
+
 void DisplayBoard(char board[ROWS][COLS]) {
-	// YOUR IMPLEMENTATION GOES HERE 
+	// YOUR IMPLEMENTATION GOES HERE
 	int counter = 0;
 	char space = ' ';
 
@@ -112,7 +143,9 @@ void DisplayBoard(char board[ROWS][COLS]) {
 		counter = 0;
 	}
 }
+
 int PlayerMove(int row, int col, char board[ROWS][COLS], char symbol) {
+	// YOUR IMPLEMENTATION GOES HERE
 	int moveAttemptStatus = MOVE_UNDETERMINED;
 
 	// Determine if this move is out of bounds with a single test...
@@ -147,14 +180,14 @@ int PlayerMove(int row, int col, char board[ROWS][COLS], char symbol) {
 	return moveAttemptStatus;
 }
 
-int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
+int VictoryCheck(int winRequirement, char checkMe[ROWS][COLS], int& victoryCode) {
+	// YOUR IMPLEMENTATION GOES HERE
 	int blankSeen = FALSE;
 	int XPresents = FALSE;
 	int OPresents = FALSE;
 	int counterX = 0;
 	int counterO = 0;
 	int n = 1;
-
 	// Is there a blank space on the board?
 	for (int i = 0; i < ROWS; i++) {
 		for (int j = 0; j < COLS; j++) {
@@ -200,6 +233,13 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 				else if (OPresents == TRUE) {
 					break;
 				}
+				//marks if one counter has won
+				if (counterX == winRequirement) {
+					XPresents = TRUE;
+				}
+				else if (counterO == winRequirement) {
+					OPresents = TRUE;
+				}
 
 				//checks the colums for X's
 				if (checkMe[x][j] == MARKONE) {
@@ -240,6 +280,14 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 					break;
 				}
 
+				//marks if a player has won
+				if (counterX == winRequirement) {
+					XPresents = TRUE;
+				}
+				else if (counterO == winRequirement) {
+					OPresents = TRUE;
+				}
+
 				//checks the colums for X's
 				if (checkMe[i][y] == MARKONE) {
 					counterX += 1;
@@ -271,13 +319,22 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 
 			// Scan in a "diagonal-up" direction. WORKING
 			for (int x = 0; x <= winRequirement; x++) {
-					//If X or O has  already been marked as winner the loop should stop marking it over and over.
+				//If X or O has  already been marked as winner the loop should stop marking it over and over.
 				if (XPresents == TRUE) {
 					break;
 				}
 				else if (OPresents == TRUE) {
 					break;
 				}
+
+				//marks if a player has won
+				if (counterX == winRequirement) {
+					XPresents = TRUE;
+				}
+				else if (counterO == winRequirement) {
+					OPresents = TRUE;
+				}
+
 
 				//checks the colums for X's
 				if (checkMe[i][j] == MARKONE) {
@@ -296,9 +353,9 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 					}
 				}
 				//resets the counter if the marker is different or a space is detected
-				 if (checkMe[i + n][j - n] != MARKONE) {
+				if (checkMe[i + n][j - n] != MARKONE) {
 					counterX = 0;
-				 }
+				}
 
 				//resets variables for the next loop
 				n = 1;
@@ -323,19 +380,27 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 						n++;
 					}
 				}//resets the counter if the marker is different or a space is detected
-				 if (checkMe[i + n][j - n] != MARKTWO) {
+				if (checkMe[i + n][j - n] != MARKTWO) {
 					counterO = 0;
 				}
 			}
 
 			// Scan in a "diagonal-down" direction.
 			for (int x = 0; x <= winRequirement; x++) {
-					//If X or O has  already been marked as winner the loop should stop marking it over and over.
+				//If X or O has  already been marked as winner the loop should stop marking it over and over.
 				if (XPresents == TRUE) {
 					break;
 				}
 				else if (OPresents == TRUE) {
 					break;
+				}
+
+				//marks if a player won
+				if (counterX == winRequirement) {
+					XPresents = TRUE;
+				}
+				else if (counterO == winRequirement) {
+					OPresents = TRUE;
 				}
 
 				//checks the diagonals for X's
@@ -355,9 +420,9 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 					}
 				}
 				//resets the counter if the marker is different or a space is detected
-				 if (checkMe[i + n][j + n] != MARKONE) {
+				if (checkMe[i + n][j + n] != MARKONE) {
 					counterX = 0;
-				 }
+				}
 
 				//resets n for the next loop
 				n = 1;
@@ -380,9 +445,9 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 						n++;
 					}
 				}//resets the counter if the marker is different or a space is detected
-				 if (checkMe[i + n][j + n] != MARKTWO) {
+				if (checkMe[i + n][j + n] != MARKTWO) {
 					counterO = 0;
-				 }
+				}
 			}
 
 		}
@@ -391,16 +456,43 @@ int VictoryCheck(char checkMe[ROWS][COLS], int winRequirement) {
 
 	//prints message
 	if (blankSeen == FALSE && XPresents != TRUE) {
-		printf("\nIt's a Tie");
+		victoryCode = TIE;
+		printf("TIE");
 	}
-	else if (blankSeen == FALSE && XPresents != TRUE) {
-		printf("It's a Tie");
+	else if (blankSeen == FALSE && OPresents != TRUE) {
+		victoryCode = TIE;
+		printf("TIE");
 	}
 	else if (XPresents == TRUE) {
-		printf("\nX IS PRESENTING");
+		victoryCode = MARKONEVICTORY;
+		printf("X YOU ARE THE WINRAR!");
 	}
 	else if (OPresents == TRUE) {
-		printf("\nO IS PRESENTING");
+		victoryCode = MARKTWOVICTORY;
+		printf("O YOU ARE THE WINRAR!");
 	}
-	return 0;
+	else if (XPresents == TRUE && OPresents == TRUE) {
+		victoryCode = EPIC_FAIL;
+		printf("Well this is awkward......");
+	}
+	return victoryCode;
+}
+
+void DisplayVictoryMessage(int victoryCode) {
+	// AN IMPLEMENTATION FOR THIS FUNCTION WAS PROVIDED IN A WEEKLY ASSIGNMENT
+	if (victoryCode == TIE) {
+		printf("TIE");
+	}
+	else if (victoryCode == MARKONEVICTORY) {
+		printf("X YOU ARE THE WINRAR!");
+	}
+	else if (victoryCode == MARKTWOVICTORY) {
+		printf("O YOU ARE THE WINRAR!");
+	}
+	else if (victoryCode == EPIC_FAIL) {
+		printf("Well this is awkward......");
+	}
+	else {
+		victoryCode = NOWIN;
+	}
 }

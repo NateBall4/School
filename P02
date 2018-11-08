@@ -40,13 +40,13 @@
 // PROTOTYPES
 void InitializeBoard(char[ROWS][COLS]);
 void DisplayBoard(char[ROWS][COLS]);
-int PlayerMove(int, int, char[ROWS][COLS], char);
+int PlayerMove(int, int, char[ROWS][COLS], char, int&);
 int VictoryCheck(int, char[ROWS][COLS],int&);
 void DisplayVictoryMessage(int);
 
 // MAIN
 int main() {
-	//Initialize ariables
+	//Initialize variables
 	char board[ROWS][COLS];
 	int victoryCode = 0;
 	int x = 0;
@@ -54,28 +54,54 @@ int main() {
 	int playerOne = 0;
 	int playerTwo = 0;
 	char marker = BLANK;
+	int moveAttemptStatus = 0;
 
 	// THE CORE LOGIC FOR YOUR GAME GOES HERE
+	//Initializes board
 	InitializeBoard(board);
+
+	//keeps the game going if no one has won
 		while(victoryCode == NOWIN){
-			if (playerOne > playerTwo) {
+			if (playerOne > playerTwo) {//this if else statement checks to see what player is up
+				printf("Player 2\n");
 				marker = MARKTWO;
 				playerTwo += 1;
 			}
 			else {
+				printf("Player 1\n");
 				marker = MARKONE;
 				playerOne += 1;
 			}
-
+			//prompts for colum and row
 			printf("\nWhich colum?: ");
 			scanf("%d", &x);
 
 			printf("\nwhich row?: ");
 			scanf("%d", &y);
 
-			PlayerMove(x, y, board, marker);
+			//tries the move
+			PlayerMove(x, y, board, marker, moveAttemptStatus);
 
+			//Checks to see if a move collision happened and if it does it undoes the player move
+			if (moveAttemptStatus == MOVE_COLLISION && marker == MARKTWO) {
+				playerTwo -= 1;
+			}
+			else if (moveAttemptStatus == MOVE_COLLISION && marker == MARKONE) {
+				playerOne -= 1;
+			}//the following two if else statements check for OOB moves and reprompts
+			else if (moveAttemptStatus == MOVE_OUT_OF_BOUNDS && marker == MARKTWO) {
+				printf("OUT OF BOUNDS\n");
+				playerTwo -= 1;
+			}
+			else if (moveAttemptStatus == MOVE_OUT_OF_BOUNDS && marker == MARKONE) {
+				printf("OUT OF BOUNDS\n");
+				playerOne -= 1;
+			}
+			//displays the board
 			DisplayBoard(board);
+			//prints a space
+			printf("\n");
+			//checks for win
 			VictoryCheck(WIN_REQUIREMENT, board, victoryCode);
 }
 	// exit program
@@ -144,9 +170,9 @@ void DisplayBoard(char board[ROWS][COLS]) {
 	}
 }
 
-int PlayerMove(int row, int col, char board[ROWS][COLS], char symbol) {
+int PlayerMove(int row, int col, char board[ROWS][COLS], char symbol, int& moveAttemptStatus) {
 	// YOUR IMPLEMENTATION GOES HERE
-	int moveAttemptStatus = MOVE_UNDETERMINED;
+	 moveAttemptStatus = MOVE_UNDETERMINED;
 
 	// Determine if this move is out of bounds with a single test...
 	if (row < 0 || row > ROWS || col < 0 || col > COLS) {
@@ -157,7 +183,7 @@ int PlayerMove(int row, int col, char board[ROWS][COLS], char symbol) {
 	}
 	else if (board[row][col] != BLANK) {
 		moveAttemptStatus = MOVE_COLLISION;
-		printf("MOVE COLLISION");
+		printf("\nMOVE COLLISION");
 	}
 	// It wasn't a collision, it wasn't out of bounds... it must be good.
 	else {
@@ -267,7 +293,7 @@ int VictoryCheck(int winRequirement, char checkMe[ROWS][COLS], int& victoryCode)
 			else if (counterO == winRequirement) {
 				OPresents = TRUE;
 			}
-
+			//resets counter
 			counterX = 0;
 			counterO = 0;
 

@@ -1,0 +1,66 @@
+#pragma warning(disable:4996)
+
+// INCLUDES AND DEFINES
+#include <stdio.h>
+#include <string.h>
+#define STRING_SIZE 500
+
+// PROTOTYPES
+void sanitizeString(char*);
+
+int main() {
+	char theString[STRING_SIZE] = "The quick brown fox jumped over the lazy dogs.";
+
+	// display the string before being sanitized
+	printf("BEFORE CLEANING THE STRING CONTAINS:\n");
+	puts(theString);
+	printf("\n");
+
+	// now run the sanitize function
+	printf("THE SANITIZE FUNCTION IS BEING CALLED.\n");
+	sanitizeString(theString);
+	printf("\n");
+
+	// display the string after being sanitized
+	printf("AFTER CLEANING THE STRING CONTAINS:\n");
+	puts(theString);
+
+	return 0;
+}
+
+void sanitizeString(char* cleanMe) {
+	// make a clean buffer to copy the sanitized characters to
+	char cleanBuffer[STRING_SIZE];
+	
+	// make a char* and point it at the beginning of the original string
+	char* originalIterator = cleanMe;
+
+	// make a char* and point it at the beginning of the clean string
+	char* cleanIterator = cleanBuffer;
+
+	// walk through the original string one character at a time
+	// sanitizing and copying the appropriate contents to the
+	// cleanBuffer
+	while(*originalIterator != '\0') {
+		// if the character is a lowercase, just copy it
+		if(*originalIterator >= 'a' && *originalIterator <= 'z') {
+			*cleanIterator = *originalIterator;
+			cleanIterator++;
+		}
+		
+		// if the character is uppercase, convert it to lowercase and copy it
+		else if(*originalIterator >= 'A' && *originalIterator <= 'Z') {
+			*cleanIterator = *originalIterator + 32;
+			cleanIterator++;
+		}
+		
+		// goto the next character in the original string
+		originalIterator++;
+	}
+
+	// null terminate the cleanBuffer
+	*cleanIterator = '\0';
+
+	// copy the cleanBuffer into cleanMe
+	strcpy(cleanMe, cleanBuffer);
+}

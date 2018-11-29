@@ -1,189 +1,121 @@
 // INCLUDES AND DEFINES
 #include <stdio.h>
+#include <string.h>
 #include <conio.h>
-#include <stdlib.h>
+
+#pragma warning(disable:4996)
 
 #ifndef __TRUE_FALSE__
 #define __TRUE_FALSE__
 #define TRUE 1
 #define FALSE 0
 #endif
-
-#define NO_INVERSE -1
-#define ERROR -2
-#define A 19
-#define B 4
-#define ALPHABET_SIZE 26
-#define ASCII_OFFSET 97
-#define BUFFER_SIZE 1000
+#define BUFFER_SIZE 10000
+#define INPUT_FILE "input.txt"
+#define OUTPUT_FILE "output.txt"
+#define ASCII_UPPER_LOWER_OFFSET 32
 
 // PROTOTYPES
-char *EncryptString(char*, int, int, int);
-char *DecryptString(char*, int, int, int);
-int ModularInverse(int, int);
-int IsPrime(int);
-int CoprimeTest(int, int);
+char *ReadStringFromFile(FILE*, char*);
+char *WriteStringToFile(char*);
+char *CleanString(char*);
 
 // MAIN
 int main() {
-	// create a sanitized string
-	char cleanString[BUFFER_SIZE] = "thequickbrownfoxjumpedoverthelazydogs";
+	char charHolder = ' ';
+	char charArray[BUFFER_SIZE] = " ";
+	char buffer = ' ';
+	FILE* inputFile = NULL;
 
-	if (CoprimeTest(A, ALPHABET_SIZE) == FALSE) {
-		printf("Failed coprime test.\n");
-	}
-	else {
+	// open the file with read permission
+	inputFile = fopen(INPUT_FILE, "r");
 
-		// display the string before encryption
-		printf("Before encryption, the string contains:\n");
-		puts(cleanString);
-		printf("\n");
-
-		// encrypt the string
-		EncryptString(cleanString, A, B, ALPHABET_SIZE);
-
-		// display the string after encryption
-		printf("After encryption, the string contains:\n");
-		puts(cleanString);
-		printf("\n");
-
-		// decrypt the string
-		DecryptString(cleanString, A, B, ALPHABET_SIZE);
-
-		// display the string after decryption
-		printf("After decryption, the string contains:\n");
-		puts(cleanString);
-		printf("\n");
+	// check to ensure the file opened
+	if (inputFile == NULL) {
+		printf("The file could not be opened for reading... exiting program.\n");
+		return 1;
 	}
 
-	// exit program
+	ReadStringFromFile(inputFile, charArray);
+	CleanString(charArray);
+	fclose(inputFile);
+	WriteStringToFile(charArray);
+
+
 	_getch();
 	return 0;
-
 }
 
-// FUNCTION IMPLEMENTATIONS
+char *ReadStringFromFile(FILE *ptr, char* charArray) {
 
-char *EncryptString(char* encryptMe, int a, int b, int n) {
-	// YOUR IMPLEMENTATION GOES HERE
-	int y = 0;
-	int j = 0;
-	int index = 0;
-	int size = 0;
-
-	while (encryptMe[j] != '\0') {
-		size++;
-		j++;
-	}
-
-	for (int i = 0; i < size; i++)
-	{
-		if (encryptMe[i] != ' ') {
-			index = (int)encryptMe[i] - 'a';
-			y = (a * index + b) % ALPHABET_SIZE;
-
-			encryptMe[i] = (char)y + ASCII_OFFSET;
-		}
-		else {
-			encryptMe[i] = ' ';
-		}
-	}
-
-	return encryptMe;  
-} // end - EncryptString()
-
-char *DecryptString(char* decryptMe, int a, int b, int n) {
-	// YOUR IMPLEMENTATION GOES HERE
-	int y = 0;
-	int index = 0;
-	int j = 0;
-	int size = 0;
-
-	while (decryptMe[j] != '\0') {
-		size++;
-		j++;
-	}
-
-	for (int i = 0; i < size; i++) {
-		if (decryptMe[i] == ' ') {
-			decryptMe[i] = ' ';
-		}
-		else {
-			index = (int)decryptMe[i] - 'a';
-			y = ModularInverse(0,0) * (index - B) % ALPHABET_SIZE;
-
-			if (y < 0) {
-				y += ALPHABET_SIZE;
-			}
-
-			decryptMe[i] = (char)y + ASCII_OFFSET;
-		}
-	}
-
-	return decryptMe;
-} // end - DecryptString()
-
-int ModularInverse(int target, int mod) {
-	// AN IMPLEMENTATION FOR THIS FUNCTION WAS PROVIDED IN CLASS
+	char charHolder = ' ';
 	int x = 0;
 
-	while (target != 1) {
-		if ((A * x) % ALPHABET_SIZE != 1) {
-			target = 0;
-			x++;
+	// read data from the file with fgetc()
+	while ((charHolder = fgetc(ptr)) != EOF) {
+		charArray[x] = charHolder;
+		x++;
+	}
+	return charArray;
+}
+
+char *WriteStringToFile(char* charArray) {
+	int j = 0;
+	int size = 0;
+
+	FILE* inputFile = NULL;
+
+	// open the file with read permission
+	inputFile = fopen(INPUT_FILE, "w");
+
+	while (charArray[j] != '\0') {
+		j++;
+			size++;
+	}
+
+	for (int x = 0; x < size; x++) {
+		fprintf(inputFile, "%c", charArray[x]);
+	}
+
+	fclose(inputFile);
+	return charArray;
+}
+
+char *CleanString(char* cleanMe) {
+	// make a clean buffer to copy the sanitized characters to
+	char cleanBuffer[BUFFER_SIZE];
+
+	// make a char* and point it at the beginning of the original string
+	char* originalIterator = cleanMe;
+
+	// make a char* and point it at the beginning of the clean string
+	char* cleanIterator = cleanBuffer;
+
+	// walk through the original string one character at a time
+	// sanitizing and copying the appropriate contents to the
+	// cleanBuffer
+	while (*originalIterator != '\0') {
+		// if the character is a lowercase, just copy it
+		if (*originalIterator >= 'a' && *originalIterator <= 'z') {
+			*cleanIterator = *originalIterator;
+			cleanIterator++;
 		}
-		else {
-			target = 1;
+
+		// if the character is uppercase, convert it to lowercase and copy it
+		else if (*originalIterator >= 'A' && *originalIterator <= 'Z') {
+			*cleanIterator = *originalIterator + 32;
+			cleanIterator++;
 		}
+
+		// goto the next character in the original string
+		originalIterator++;
 	}
 
-	return x;
-} // end - ModularInverse()
+	// null terminate the cleanBuffer
+	*cleanIterator = '\0';
 
-int IsPrime(int amIPrime) {
-	// AN IMPLEMENTATION FOR THIS FUNCTION WAS PROVIDED IN CLASS
-	int i = 0;
-	int isPrime = TRUE;
+	// copy the cleanBuffer into cleanMe
+	strcpy(cleanMe, cleanBuffer);
 
-	// check for border cases
-	if (amIPrime <= 1) {
-		isPrime = FALSE;
-	}
-
-	// force check the number for primality
-	for (i = 2; i < amIPrime; i++) {
-		if (amIPrime % i == 0)
-			isPrime = FALSE;
-	}
-
-	return isPrime;
-} // end - IsPrime()
-
-int CoprimeTest(int numOne, int numTwo) {
-	// AN IMPLEMENTATION FOR THIS FUNCTION WAS PROVIDED IN CLASS
-	int i = 0;
-	int areCoprime = TRUE;
-	int larger = 0;
-	int smaller = 0;
-
-	// determine that larger of the two numbers
-	if (numOne >= numTwo) {
-		larger = numOne;
-		smaller = numTwo;
-	}
-	else {
-		larger = numTwo;
-		smaller = numOne;
-	}
-
-	for (i = 1; i <= larger; i++) {
-		// find a prime factor for numOne
-		if (larger % i == 0 && IsPrime(i))
-			// determine if numTwo is divisible by the candidate prime
-			if (smaller % i == 0)
-				areCoprime = FALSE;
-	}
-
-	// return the result
-	return areCoprime;
-} // end - CoprimeTest()
+	return cleanMe;
+}

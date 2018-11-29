@@ -1,6 +1,9 @@
 // INCLUDES AND DEFINES
 #include <stdio.h>
 #include <string.h>
+#include <conio.h>
+
+#pragma warning(disable:4996)
 
 #ifndef __TRUE_FALSE__
 #define __TRUE_FALSE__
@@ -13,16 +16,104 @@
 #define ASCII_UPPER_LOWER_OFFSET 32
 
 // PROTOTYPES
-int ReadStringFromFile(char*, char*);
-int WriteStringToFile(char*, char*);
-int CleanString(char*);
+char *ReadStringFromFile(char*);
+char *WriteStringToFile(char*);
+char *CleanString(char*);
 
 // MAIN
 int main() {
-char buffer[BUFFER_SIZE] = "";
-ReadStringFromFile(INPUT_FILE, buffer);
-CleanString(buffer);
-WriteStringToFile(OUTPUT_FILE, buffer);
+	char charHolder = ' ';
+	char charArray[BUFFER_SIZE] = " ";
+	char buffer = ' ';
+	FILE* inputFile = NULL;
 
-return 0;
+	// open the file with read permission
+	inputFile = fopen(INPUT_FILE, "r");
+
+	// check to ensure the file opened
+	if (inputFile == NULL) {
+		printf("The file could not be opened for reading... exiting program.\n");
+		return 1;
+	}
+
+	ReadStringFromFile(charArray);
+	CleanString(charArray);
+	fclose(inputFile);
+	WriteStringToFile(charArray);
+
+
+	_getch();
+	return 0;
+}
+
+char *ReadStringFromFile(char* charArray) {
+	FILE* inputFile = NULL;
+
+	// open the file with read permission
+	inputFile = fopen(INPUT_FILE, "r");
+
+	char charHolder = ' ';
+	int x = 0;
+
+	// read data from the file with fgetc()
+	while ((charHolder = fgetc(inputFile)) != EOF) {
+		charArray[x] = charHolder;
+		x++;
+	}
+
+	fclose(inputFile);
+	return charArray;
+}
+
+char *WriteStringToFile(char* charArray) {
+	FILE* inputFile = NULL;
+
+	// open the file with read permission
+	inputFile = fopen(INPUT_FILE, "w");
+
+	for (int x = 0; x < BUFFER_SIZE; x++) {
+		fprintf(inputFile, "%c", charArray[x]);
+	}
+
+	fclose(inputFile);
+	return charArray;
+}
+
+char *CleanString(char* cleanMe) {
+	// make a clean buffer to copy the sanitized characters to
+	char cleanBuffer[BUFFER_SIZE];
+
+	// make a char* and point it at the beginning of the original string
+	char* originalIterator = cleanMe;
+
+	// make a char* and point it at the beginning of the clean string
+	char* cleanIterator = cleanBuffer;
+
+	// walk through the original string one character at a time
+	// sanitizing and copying the appropriate contents to the
+	// cleanBuffer
+	while (*originalIterator != '\0') {
+		// if the character is a lowercase, just copy it
+		if (*originalIterator >= 'a' && *originalIterator <= 'z') {
+			*cleanIterator = *originalIterator;
+			cleanIterator++;
+		}
+
+		// if the character is uppercase, convert it to lowercase and copy it
+		else if (*originalIterator >= 'A' && *originalIterator <= 'Z') {
+			*cleanIterator = *originalIterator + 32;
+			cleanIterator++;
+		}
+
+		// goto the next character in the original string
+		originalIterator++;
+	}
+
+	// null terminate the cleanBuffer
+	*cleanIterator = '\0';
+
+	// copy the cleanBuffer into cleanMe
+	strcpy(cleanMe, cleanBuffer);
+
+	return cleanMe;
 }

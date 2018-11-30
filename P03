@@ -23,7 +23,7 @@
 
 // PROTOTYPES
 char *ReadStringFromFile(FILE*, char*);
-char *WriteStringToFile(char*, char*);
+char *WriteStringToFile(FILE*, char*);
 char *CleanString(char*);
 char *EncryptString(char*, int, int, int);
 char *DecryptString(char*, int, int, int);
@@ -42,7 +42,7 @@ int main() {
 	char charArray[BUFFER_SIZE] = " ";
 	char input[BUFFER_SIZE] = "input.txt";
 	char output[BUFFER_SIZE] = "output.txt";
-
+	//if the user doesn't input 7 keep repeating the loop
 	while (choice != 7) {
 		printf("--- CIS 111 - Affine Cipher Program - Author: Nathan Ball -----\n");
 		printf("----------------------------------------------------------------\n");
@@ -56,24 +56,32 @@ int main() {
 		printf("1.) Select input file name\n");
 		printf("2.) Select output file name\n");
 		printf("3.) Select affine cipher key\n");
-		printf("4.) Encrypt input file\n");
-		printf("5.) Decrypt input file\n");
+		printf("4.) Encrypt input file then write to output file\n");
+		printf("5.) Decrypt input file then write to output file\n");
 		printf("6.) Get directory listing\n");
 		printf("7.) Exit\n");
 		printf(":");
+		//gets user input
 		scanf("%d", &choice);
-
+		rewind(stdin);
+		//starts a switch 
 		switch (choice) {
 		case 1: {
 			//gets input file name
 			printf("Input file name: ");
 			scanf("%s", &input);
+			//allowes the user to read output before continuing
+			printf("Press and key to continue...");
+			_getch();
 			break;
 			}
 		case 2: {
 			//gets output file name
 			printf("Output file name: ");
 			scanf("%s", &output);
+			//allowes the user to read output before continuing
+			printf("Press and key to continue...");
+			_getch();
 			break;
 		}
 		case 3: {
@@ -95,16 +103,21 @@ int main() {
 
 					CoprimeTest(a, b);
 				}
+				//allowes the user to read output before continuing
+				printf("Press and key to continue...");
+				_getch();
 				break;
 		}
 		case 4: {
 			//open file if it doesn't exist then make it
 			FILE* inputFile = NULL;
 			inputFile = fopen(input, "r+");
+			rewind(inputFile);
 			ReadStringFromFile(inputFile, charArray);
 			//if the file can't be opened or created exit
 			if (inputFile == NULL) {
 				printf("The file could not be opened for reading... exiting program.\n");
+				_getch();
 				return 1;
 			}
 			//gets how many characters in the file
@@ -121,62 +134,101 @@ int main() {
 			printf("\n");
 			//cleans string then prints it
 			CleanString(charArray);
+			while (charArray[j] != '\0') {
+				j++;
+				newSize++;
+			}
+			j = 0;
 			printf("Clean Text: ");
-			for (int x = 0; x <= size; x++) {
+			for (int x = 0; x <= newSize; x++) {
 				printf("%c", charArray[x]);
 			}
 			printf("\n");
 			//encrypts string then prints it then sends it to the output file
 			EncryptString(charArray, a, b, ALPHABET_SIZE);
-			//gets how many characters in the file
-			while (charArray[j] != '\0') {
-				j++;
-				newSize++;
-			}
 			printf("Encrypted String: ");
 			for (int x = 0; x <= newSize; x++) {
 				printf("%c", charArray[x]);
 			}
-			WriteStringToFile(output, charArray);
+			//opens output file
+			FILE* outputFile = NULL;
+			outputFile = fopen(output, "w+");
+			//checks to see if the file is real
+			if (outputFile == NULL) {
+				printf("The file could not be opened for reading... exiting program.\n");
+				_getch();
+				return 1;
+			}
+			//writes string to file
+			WriteStringToFile(outputFile, charArray);
+			//closes file
+			fclose(outputFile);
 			printf("\n");
 			//close file
 			fclose(inputFile);
+			//allowes the user to read output before continuing
+			printf("Press and key to continue...");
+			_getch();
 			break;
 		}
 		case 5: {
 			//prints encrypted text
 			printf("Encrypted Text: ");
-			for (int x = 0; x <= size; x++) {
+			for (int x = 0; x <= newSize; x++) {
 				printf("%c", charArray[x]);
 			}
 			printf("\n");
 			//prints clean text then prints it in the file
 			DecryptString(charArray, a, b, ALPHABET_SIZE);
 			printf("Clean Text: ");
-			for (int x = 0; x <= size; x++) {
+			for (int x = 0; x <= newSize; x++) {
 				printf("%c", charArray[x]);
 			}
-			WriteStringToFile(output, charArray);
+			//opens output file
+			FILE* outputFile = NULL;
+			outputFile = fopen(output, "w+");
+			//checks to see if the file is real
+			if (outputFile == NULL) {
+				printf("The file could not be opened for reading... exiting program.\n");
+				_getch();
+				return 1;
+			}
+			//writes string to file
+			WriteStringToFile(outputFile, charArray);
+			//closes file
+			fclose(outputFile);
 			printf("\n");
+			//allowes the user to read output before continuing
+			printf("Press and key to continue...");
+			_getch();
 			break;
 		}
 		case 6: {
+			//prints system directory
 			system("dir / p");
+			//allowes the user to read output before continuing
+			printf("Press and key to continue...");
+			_getch();
+			break;
+		}
+		case 7: {
+			//exit
+			_getch();
+			return 0;
+		}
+		default: {
+			printf("Not a valid choice\n");
 			break;
 		}
 		}
 		
 	}
-	//exit
-	_getch();
-	return 0;
 }
 
 char *ReadStringFromFile(FILE *ptr, char* charArray) {
 
 	char charHolder = ' ';
 	int x = 0;
-
 	// read data from the file with fgetc()
 	while ((charHolder = fgetc(ptr)) != EOF) {
 		charArray[x] = charHolder;
@@ -185,25 +237,20 @@ char *ReadStringFromFile(FILE *ptr, char* charArray) {
 	return charArray;
 }
 
-char *WriteStringToFile(char* ptr,char* charArray) {
+char *WriteStringToFile(FILE* ptr,char* charArray) {
 	int j = 0;
 	int size = 0;
 
-	FILE* inputFile = NULL;
-
-	// open the file with read permission
-	inputFile = fopen(ptr, "w");
-
+	//gets the size of the string in the array
 	while (charArray[j] != '\0') {
 		j++;
 		size++;
 	}
-
+	//copies the string to an array
 	for (int x = 0; x < size; x++) {
-		fprintf(inputFile, "%c", charArray[x]);
+		fprintf(ptr, "%c", charArray[x]);
 	}
 
-	fclose(inputFile);
 	return charArray;
 }
 
@@ -252,12 +299,12 @@ char *EncryptString(char* encryptMe, int a, int b, int n) {
 	int j = 0;
 	int index = 0;
 	int size = 0;
-
+	//gets string size
 	while (encryptMe[j] != '\0') {
 		size++;
 		j++;
 	}
-
+	//encrypts string
 	for (int i = 0; i < size; i++)
 	{
 		if (encryptMe[i] != ' ') {
@@ -280,12 +327,12 @@ char *DecryptString(char* decryptMe, int a, int b, int n) {
 	int index = 0;
 	int j = 0;
 	int size = 0;
-
+	//gets string size
 	while (decryptMe[j] != '\0') {
 		size++;
 		j++;
 	}
-
+	//decrypts string
 	for (int i = 0; i < size; i++) {
 		if (decryptMe[i] == ' ') {
 			decryptMe[i] = ' ';
